@@ -6,29 +6,39 @@ class AStarGraph(object):
     # Define a class board like grid with two barriers
 
     def __init__(self, arr):
-        self.barriers = []
-        for i in arr:
-            self.barriers.append(i[1:])
+        self.barriers = arr
         print("barriers", self.barriers)
 
     def heuristic(self, start, goal):
         # Use Manhattan Distance as heuristic
-        return abs(start[0]-goal[0]) + abs(start[1]-goal[1])
+        return abs(start[1]-goal[1]) + abs(start[2]-goal[2])
 
     def neighbours(self, pos):
         n = []
         # Moves allow link a chess king
         for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            x2 = pos[0] + dx
-            y2 = pos[1] + dy
-            if x2 < 0 or x2 > 8 or y2 < 0 or y2 > 8 or [x2, y2] in self.barriers:
+            x2 = pos[1] + dx
+            y2 = pos[2] + dy
+            if x2 < 0 or x2 > 8 or y2 < 0 or y2 > 8:
                 continue
-            n.append((x2, y2))
+            canpass = True
+            for barrier in self.barriers:
+                if x2 == barrier[1] and y2 == barrier[2]:
+                    for opposite in self.barriers:
+                        if x2+dx == opposite[1] and y2+dy == opposite[2]:
+                            canpass = False
+                            break
+                    if canpass:
+                        x2 += dx
+                        y2 += dy
+                    break
+            if canpass:
+                n.append((pos[0], x2, y2))
         return n
 
     def move_cost(self, a, b):
         for barrier in self.barriers:
-            if b in barrier:
+            if b in barrier and b[0] > barrier[0]:
                 return 100  # Extremely high cost to enter barrier squares
         return 1  # Normal movement cost
 
@@ -55,14 +65,14 @@ def AStarSearch(start, end, graph):
                 current = pos
 
         # Check if we have reached the goal
-        if current == end:
+        if current[1:] == end[1:]:
             # Retrace our route backward
             path = [current]
             while current in cameFrom:
                 current = cameFrom[current]
                 path.append(current)
             path.reverse()
-            return path, F[end]  # Done!
+            return path, F[current]  # Done!
 
         # Mark the current vertex as closed
         openVertices.remove(current)

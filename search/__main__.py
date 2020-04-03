@@ -18,15 +18,15 @@ def main():
     graph = AStar.AStarGraph(black)
 
     # start就是我们选中的白棋子
-    start = (0,0)
+    start = (1,0,0)
     # end就是需要定义我们想让白棋子走到哪个点的坐标
-    end = (4,4)
+    end = (0,7,1)
     result, cost = AStar.AStarSearch(start, end, graph)
 
     # 这一部分是看outout的 matplot部分最后需要删掉
     print("route", result)
     print("cost", cost)
-    AStar.plt.plot([v[0] for v in result], [v[1] for v in result])
+    AStar.plt.plot([v[1] for v in result], [v[2] for v in result])
     for barrier in graph.barriers:
         if barrier in result:
             print("There is an error in point", barrier)
