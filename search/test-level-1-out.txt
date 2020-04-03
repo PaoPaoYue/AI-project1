@@ -1,0 +1,11 @@
+# Notes:
+# * If your editor displays this file without line breaks, it may be
+#   misintepreting the file format (unix line endings). Please try
+#   another editor to avoid confusion.
+# * This output represents ONE correct action sequence for the
+#   corresponding input. Your program is allowed to find any
+#   correct sequence, it does not have to find this same one.
+MOVE 1 from (1, 4) to (2, 4).
+MOVE 1 from (2, 4) to (3, 4).
+MOVE 1 from (3, 4) to (3, 5).
+BOOM at (3, 5).
