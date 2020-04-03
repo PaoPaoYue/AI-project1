@@ -6,7 +6,10 @@ class AStarGraph(object):
     # Define a class board like grid with two barriers
 
     def __init__(self, arr):
-        self.barriers = [arr]
+        self.barriers = []
+        for i in arr:
+            self.barriers.append(i[1:])
+        print("barriers", self.barriers)
 
     def heuristic(self, start, goal):
         # Use Manhattan Distance as heuristic
@@ -18,7 +21,7 @@ class AStarGraph(object):
         for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             x2 = pos[0] + dx
             y2 = pos[1] + dy
-            if x2 < 0 or x2 > 8 or y2 < 0 or y2 > 8:
+            if x2 < 0 or x2 > 8 or y2 < 0 or y2 > 8 or [x2, y2] in self.barriers:
                 continue
             n.append((x2, y2))
         return n
