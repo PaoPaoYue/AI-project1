@@ -156,5 +156,14 @@ def sort_by_values_len(dictionary):
     dict_len = {key: len(value[0]) for key, value in dictionary.items()}
     import operator
     sorted_key_list = sorted(dict_len.items(), key=operator.itemgetter(1), reverse=True)
-    sorted_dict = [{item[0]: dictionary[item[0]]} for item in sorted_key_list]
+    sorted_dict = {item[0]: dictionary[item[0]] for item in sorted_key_list}
     return sorted_dict
+
+
+#
+def print_dict(dictionary):
+    print("\n########################################################")
+    for i in dictionary:
+        print("起炸点"+str(i) + ":", dictionary[i])
+    print("########################################################\n")
+

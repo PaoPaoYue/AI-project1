@@ -1,7 +1,7 @@
 import sys
 import json
 
-from search.util import print_move, print_boom, print_board, sort_by_values_len
+from search.util import print_move, print_boom, print_board, sort_by_values_len, print_dict
 from search import AStar
 
 
@@ -34,6 +34,18 @@ def most_valuable_points(black_without_n):
     return sort_by_values_len(boom_dict)
 
 
+# 这一部分是看outout的 matplot部分最后需要删掉
+def show_output(result, cost, graph):
+    print("route", result)
+    print("cost", cost)
+    AStar.plt.plot([v[1] for v in result], [v[2] for v in result])
+    for barrier in graph.barriers:
+        if barrier in result:
+            print("There is an error in point", barrier)
+    AStar.plt.xlim(0, 8)
+    AStar.plt.ylim(0, 8)
+    AStar.plt.show()
+
 def main():
     with open(sys.argv[1]) as file:
         data = json.load(file)
@@ -53,21 +65,11 @@ def main():
     # end就是需要定义我们想让白棋子走到哪个点的坐标
     end = (0,7,1)
 
-    # print(most_valuable_points(black_without_n))
-    print(most_valuable_points(black_without_n))
-
+    # 打印字典 列出所有点炸的结果 value里第一个list列出所有能炸到黑点 第二个列出所有能炸到的点
+    print_dict(most_valuable_points(black_without_n))
     result, cost = AStar.AStarSearch(start, end, graph)
 
-    # 这一部分是看outout的 matplot部分最后需要删掉
-    print("route", result)
-    print("cost", cost)
-    AStar.plt.plot([v[1] for v in result], [v[2] for v in result])
-    for barrier in graph.barriers:
-        if barrier in result:
-            print("There is an error in point", barrier)
-    AStar.plt.xlim(0, 8)
-    AStar.plt.ylim(0, 8)
-    AStar.plt.show()
+    show_output(result, cost, graph)
 
 
 if __name__ == '__main__':
