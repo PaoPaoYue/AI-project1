@@ -1,8 +1,37 @@
 import sys
 import json
 
-from search.util import print_move, print_boom, print_board
+from search.util import print_move, print_boom, print_board, sort_by_values_len
 from search import AStar
+
+
+# Take an empty array, a point and all enemies, check if the white boom here, how many black can be killed
+# WARN: This function can not detect the white yet
+# the parameter copy is to prevent data loss
+def boom(arr, point, copy, black):
+    for i in [-1, 0, 1]:
+        for j in [-1, 0, 1]:
+            neighbour = [point[0]+i, point[1]+j]
+            if neighbour[0] < 0 or neighbour[0] > 8 or neighbour[1] < 0 or neighbour[1] > 8:
+                continue
+            arr[1].append(neighbour)
+            if (neighbour in black) and (neighbour not in copy):
+                arr[0].append(neighbour)
+                copy.append(neighbour)
+                boom(arr, neighbour, copy, black)
+    return arr
+
+
+# 找到能炸的最多的点并排序
+def most_valuable_points(black_without_n):
+    boom_dict = {}
+    for i in range(0, 9):
+        for j in range(0, 9):
+            if [i, j] in black_without_n:
+                continue
+            boom_dict[(i, j)] = boom(([], []), [i, j], [], black_without_n)
+    # sort the dict by value in descending order
+    return sort_by_values_len(boom_dict)
 
 
 def main():
@@ -13,14 +42,20 @@ def main():
     print(data)
     white = data['white']
     black = data['black']
+    black_without_n = [i[1:] for i in black]
+    print(black_without_n)
 
-    # graph就是路障所处的位置(只考虑了黑棋为路障的情况) 我还没有考虑n 所以现在只要有路障就跳不过去
+    # graph就是路障所处的位置(白棋不算路障)
     graph = AStar.AStarGraph(black)
 
     # start就是我们选中的白棋子
     start = (1,0,0)
     # end就是需要定义我们想让白棋子走到哪个点的坐标
     end = (0,7,1)
+
+    # print(most_valuable_points(black_without_n))
+    print(most_valuable_points(black_without_n))
+
     result, cost = AStar.AStarSearch(start, end, graph)
 
     # 这一部分是看outout的 matplot部分最后需要删掉

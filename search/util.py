@@ -149,3 +149,12 @@ def print_board(board_dict, message="", unicode=False, compact=True, **kwargs):
             cells.append(str(board_dict[xy])[:3].center(3))
     # print it
     print(template.format(message, *cells), **kwargs)
+
+
+#
+def sort_by_values_len(dictionary):
+    dict_len = {key: len(value[0]) for key, value in dictionary.items()}
+    import operator
+    sorted_key_list = sorted(dict_len.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_dict = [{item[0]: dictionary[item[0]]} for item in sorted_key_list]
+    return sorted_dict
