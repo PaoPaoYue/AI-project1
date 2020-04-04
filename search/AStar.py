@@ -21,9 +21,11 @@ class AStarGraph(object):
             y2 = pos[2] + dy
             if x2 < 0 or x2 > 8 or y2 < 0 or y2 > 8:
                 continue
-            canpass = True
             for barrier in self.barriers:
+                canpass = True
                 if x2 == barrier[1] and y2 == barrier[2]:
+                    if barrier[0] >= pos[0]:
+                        continue
                     for opposite in self.barriers:
                         if x2+dx == opposite[1] and y2+dy == opposite[2]:
                             canpass = False

@@ -151,7 +151,7 @@ def print_board(board_dict, message="", unicode=False, compact=True, **kwargs):
     print(template.format(message, *cells), **kwargs)
 
 
-#
+# 根据能炸到的黑点的个数排倒序
 def sort_by_values_len(dictionary):
     dict_len = {key: len(value[0]) for key, value in dictionary.items()}
     import operator

@@ -46,6 +46,7 @@ def show_output(result, cost, graph):
     AStar.plt.ylim(0, 8)
     AStar.plt.show()
 
+
 def main():
     with open(sys.argv[1]) as file:
         data = json.load(file)
@@ -60,13 +61,14 @@ def main():
     # graph就是路障所处的位置(白棋不算路障)
     graph = AStar.AStarGraph(black)
 
-    # start就是我们选中的白棋子
-    start = (1,0,0)
-    # end就是需要定义我们想让白棋子走到哪个点的坐标
-    end = (0,7,1)
-
     # 打印字典 列出所有点炸的结果 value里第一个list列出所有能炸到黑点 第二个列出所有能炸到的点
     print_dict(most_valuable_points(black_without_n))
+
+    # start就是我们选中的白棋子
+    start = (2, 0, 0)
+    # end就是需要定义我们想让白棋子走到哪个点的坐标
+    end = (0, 7, 1)
+
     result, cost = AStar.AStarSearch(start, end, graph)
 
     show_output(result, cost, graph)
