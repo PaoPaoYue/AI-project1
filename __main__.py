@@ -11,7 +11,7 @@ from search.Locator import *
 
 
 def main():
-    with open("mytestcase/test-level-3.json") as file:
+    with open("mytestcase/test-level-4.json") as file:
         data = json.load(file)
     print(data)
 
