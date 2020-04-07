@@ -1,5 +1,6 @@
 from __future__ import print_function
 import matplotlib.pyplot as plt
+from util import *
 
 
 class AStarGraph(object):
@@ -15,26 +16,15 @@ class AStarGraph(object):
 
     def neighbours(self, pos):
         n = []
+        max_jump = pos[0]
         # Moves allow link a chess king
         for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            x2 = pos[1] + dx
-            y2 = pos[2] + dy
-            if x2 < 0 or x2 > 8 or y2 < 0 or y2 > 8:
-                continue
-            for barrier in self.barriers:
-                canpass = True
-                if x2 == barrier[1] and y2 == barrier[2]:
-                    if barrier[0] >= pos[0]:
-                        continue
-                    for opposite in self.barriers:
-                        if x2+dx == opposite[1] and y2+dy == opposite[2]:
-                            canpass = False
-                            break
-                    if canpass:
-                        x2 += dx
-                        y2 += dy
-                    break
-            if canpass:
+            for jump in range(1, max_jump+1):
+                x2 = pos[1] + jump*dx
+                y2 = pos[2] + jump*dy
+                if x2 < 0 or x2 > 8 or y2 < 0 or y2 > 8 or (x2, y2) in self.barriers:
+                    continue
+
                 n.append((pos[0], x2, y2))
         return n
 
@@ -65,6 +55,7 @@ def AStarSearch(start, end, graph):
             if current is None or F[pos] < currentFscore:
                 currentFscore = F[pos]
                 current = pos
+        print(current)
 
         # Check if we have reached the goal
         if current[1:] == end[1:]:
@@ -81,7 +72,7 @@ def AStarSearch(start, end, graph):
         closedVertices.add(current)
 
         # Update scores for vertices near the current position
-        for neighbour in graph.neighbours(current):
+        for neighbour in sorted(graph.neighbours(current)):
             if neighbour in closedVertices:
                 continue  # We have already processed this node exhaustively
             candidateG = G[current] + graph.move_cost(current, neighbour)
