@@ -184,3 +184,36 @@ def setdiff_between_lists(lst1, lst2):
 
 def size_tokens(tokens):
     return sum([tokens[i] for i in tokens])
+
+
+def expand_nodes(path):
+    return [i[0] for i in path for j in range(i[1])]
+
+
+def get_output(path):
+    current = expand_nodes(path[0].white)
+    for i in range(1, len(path)):
+        next_path = expand_nodes(path[i].white)
+        diff = setdiff(current, next_path)
+        # count = 0
+        # for j in range(len(current)):
+        #     if current[j] != next_path[j]:
+        #         _from = current[j]
+        #         _to = next_path[j]
+        #         current[j] = next_path[j]
+        #         count += 1
+        print("MOVE {} from {} to {}.".format(diff[0], diff[1], diff[2]))
+        current = expand_nodes(path[i].white)
+
+    print("Boom at {}.".format(path[0].target))
+
+
+def setdiff(lst1, lst2):
+    lst1_copy = [i for i in lst1]
+    lst2_copy = [i for i in lst2]
+    for i in lst1:
+        if i in lst2_copy:
+            lst1_copy.remove(i)
+            lst2_copy.remove(i)
+    return len(lst1_copy), lst1_copy[0], lst2_copy[0]
+
