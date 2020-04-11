@@ -151,24 +151,15 @@ def print_board(board_dict, message="", unicode=False, compact=True, **kwargs):
     print(template.format(message, *cells), **kwargs)
 
 
-#
-def print_dict(dictionary):
-    print("\n########################################################")
-    for i in dictionary:
-        print("起炸点"+str(i) + ":", dictionary[i])
-    print("########################################################\n")
-
-
 def expand_nodes(path):
     return [i[0] for i in path for j in range(i[1])]
 
 
-def get_output(path):
+def get_output(path, target):
     current = expand_nodes(path[0].white)
     for i in range(1, len(path)):
         next_path = expand_nodes(path[i].white)
         diff = setdiff(current, next_path)
-        target = diff[2]
         print_move(diff[0], diff[1].x, diff[1].y, diff[2].x, diff[2].y)
         current = expand_nodes(path[i].white)
     print_boom(target.x, target.y)
