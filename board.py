@@ -3,7 +3,7 @@ from enum import Enum
 from collections import defaultdict
 
 from util import *
-from search.AStarSearch import *
+from algorithm.AStarSearch import *
 
 BOARD_LEN = 8
 
@@ -167,7 +167,7 @@ class Board:
                     else:
                         out_score.append(dist)
                 if in_score:
-                    return sum(in_score)
+                    return min(in_score) - len(out_score)
                 else:
                     return sum(out_score)
 
@@ -218,17 +218,13 @@ class Board:
 
             return __inner
 
-        print("search starts! ignore:" , ignore)
         path = AStarSearch(BoardNode(board.get_white(), 0, None), goal_test())
         if path:
-            print("result:")
             for node in path:
                 board.set_white(node.white)
-                board.print()
             board.set_boom(target)
-            board.print()
         else:
-            print("failed to find route")
+            print("# failed to find route")
         return path
 
     def print(self):

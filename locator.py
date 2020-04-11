@@ -36,8 +36,6 @@ class Locator:
                             boom_dict[boom_tuple] = pos
                     else:
                         boom_dict[boom_tuple] = pos
-        for boom_set, pos in boom_dict.items():
-            print(*boom_set, "pos::", pos)
         return boom_dict
 
     def all_boom_combos(self):

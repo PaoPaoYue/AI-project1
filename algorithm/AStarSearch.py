@@ -1,4 +1,4 @@
-from search.PriorityQueue import *
+from algorithm.PriorityQueue import *
 
 class Node:
     
