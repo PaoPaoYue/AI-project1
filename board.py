@@ -220,11 +220,8 @@ class Board:
 
         path = AStarSearch(BoardNode(board.get_white(), 0, None), goal_test())
         if path:
-            for node in path:
-                board.set_white(node.white)
+            board.set_white(path[-1].white)
             board.set_boom(target)
-        else:
-            print("# failed to find route")
         return path
 
     def print(self):

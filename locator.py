@@ -13,6 +13,14 @@ class Locator:
         self.black = board.get_black()
         self.boom_dict = self.__create_boom_dict()
 
+    def __no_equal_set(self, sets):
+        for i, set in enumerate(sets):
+            for j, other_set in enumerate(sets):
+                if i != j and set == other_set:
+                    return False
+        return True
+
+
     def __closest_dist(self, target):
         min_dist = BOARD_LEN * BOARD_LEN
         for pos,_ in self.white:
@@ -30,25 +38,23 @@ class Locator:
                     continue
                 boom_set = self.board.get_boom(pos, True)
                 if boom_set:
-                    boom_tuple = tuple(sorted(boom_set))
-                    if boom_tuple in boom_dict:
-                        if self.__closest_dist(pos) < self.__closest_dist(boom_dict[boom_tuple]):
-                            boom_dict[boom_tuple] = pos
-                    else:
-                        boom_dict[boom_tuple] = pos
+                    boom_dict[pos] = boom_set
         return boom_dict
 
     def all_boom_combos(self):
         white_size = sum([num for pos, num in self.white])
         black_size = len(self.black)
+        combos = []
         for i in range(white_size, 0, -1):
             for comb in itertools.combinations(self.boom_dict.items(), i):
-                all_boom_set = set()
-                pos_comb = []
-                for boom_set, pos in comb:
-                    pos_comb.append(pos)
-                    all_boom_set.update(boom_set)
-                if len(all_boom_set) == black_size:
-                    for res in itertools.permutations(pos_comb, len(pos_comb)):
-                        yield res
+                if self.__no_equal_set([boom_set for pos, boom_set in comb]):
+                    all_boom_set = set()
+                    pos_comb = []
+                    for pos, boom_set in comb:
+                        pos_comb.append(pos)
+                        all_boom_set.update(boom_set)
+                    if len(all_boom_set) == black_size:
+                        for res in itertools.permutations(pos_comb, len(pos_comb)):
+                            combos.append(res)
+        return sorted(combos, key=lambda combo: sum(self.__closest_dist(pos) for pos in combo))
 
