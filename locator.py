@@ -21,7 +21,6 @@ class Locator:
                 min_dist = dist
         return min_dist
 
-
     def __create_boom_dict(self):
         boom_dict = {}
         for x in range(BOARD_LEN):
@@ -55,30 +54,3 @@ class Locator:
                     for res in itertools.permutations(pos_comb, len(pos_comb)):
                         yield res
 
-
-# 根据能炸到的黑点的个数排倒序 只输出可炸点
-def sort_by_values_len(dictionary, need_reverse):
-
-    dict_len = {key: len(value[0]) for key, value in dictionary.items()}
-    sorted_key_list = sorted(dict_len.items(), key=operator.itemgetter(1), reverse=need_reverse)
-    sorted_dict = {item[0]: dictionary[item[0]] for item in sorted_key_list if len(dictionary[item[0]][0]) > 0}
-    return sorted_dict
-
-
-# Take an empty array, a start point and all enemies, check if the white boom here, how many black can be killed
-# WARN: This function can not detect the white yet
-# the parameter copy is to prevent data loss
-def boom(self, arr, start, copy):
-
-    for i in [-1, 0, 1]:
-        for j in [-1, 0, 1]:
-            neighbour = (start[0] + i, start[1] + j)
-            if neighbour[0] < 0 or neighbour[0] > 8 or neighbour[1] < 0 or neighbour[1] > 8:
-                continue
-            arr[1].append(neighbour)
-
-            if (neighbour in self.barriers) and (neighbour not in copy):
-                arr[0].append(neighbour)
-                copy.append(neighbour)
-                boom(self, arr, neighbour, copy)
-    return arr

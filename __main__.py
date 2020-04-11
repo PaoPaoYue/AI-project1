@@ -8,18 +8,14 @@ from board import *
 from locator import *
 
 
-def main():
-
-    board = Board()
-    board.read("mytestcase/test-level-3.json")
-    board.print()
-
+def solve(board):
     locator = Locator(board)
     white_size = len(board.get_white())
+
     for comb in locator.all_boom_combos():
         print("combs", *comb)
         cur_board = board.copy()
-        path = []
+        paths = []
         for i, pos in enumerate(comb):
                 path = cur_board.find_route(pos)
                 if not path and white_size - len(comb) - i > 0:
@@ -27,9 +23,25 @@ def main():
                 if not path:
                     print("try next comb")
                     continue
-                if i == len(comb) - 1:
-                    print("succeed!!")
-                    return
+                paths.append(path)
+                if not cur_board.get_black():
+                    return paths
+
+def main():
+
+    board = Board()
+    board.read("mytestcase/test-level-3.json")
+    board.print()
+
+    paths = solve(board)
+
+    if not paths:
+        print("failed!!!")
+    else:
+        print("succeed!!")
+        for path in paths:
+            get_output(path)
+    
     
 
 if __name__ == '__main__':

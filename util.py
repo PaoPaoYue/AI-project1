@@ -159,33 +159,6 @@ def print_dict(dictionary):
     print("########################################################\n")
 
 
-def any_lst1_in_lst2(lst1, lst2):
-    for i in lst1:
-        if i in lst2:
-            return True
-    return False
-
-
-def all_lst1_in_lst2(lst1, lst2):
-    for i in lst1:
-        if i not in lst2:
-            return False
-    return True
-
-
-def setdiff_between_lists(lst1, lst2):
-    for i in lst1:
-        if i in lst2:
-            lst1[lst1.index(i)][0] = (lst1[lst1.index(i)][0]-1, lst1[lst1.index(i)][1], lst1[lst1.index(i)][2])
-            if lst1[lst1.index(i)][0] < 1:
-                lst1.remove(lst1[lst1.index(i)][0])
-            lst2.remove(i)
-
-
-def size_tokens(tokens):
-    return sum([tokens[i] for i in tokens])
-
-
 def expand_nodes(path):
     return [i[0] for i in path for j in range(i[1])]
 
@@ -195,17 +168,10 @@ def get_output(path):
     for i in range(1, len(path)):
         next_path = expand_nodes(path[i].white)
         diff = setdiff(current, next_path)
-        # count = 0
-        # for j in range(len(current)):
-        #     if current[j] != next_path[j]:
-        #         _from = current[j]
-        #         _to = next_path[j]
-        #         current[j] = next_path[j]
-        #         count += 1
-        print("MOVE {} from {} to {}.".format(diff[0], diff[1], diff[2]))
+        target = diff[2]
+        print_move(diff[0], diff[1].x, diff[1].y, diff[2].x, diff[2].y)
         current = expand_nodes(path[i].white)
-
-    print("Boom at {}.".format(path[0].target))
+    print_boom(target.x, target.y)
 
 
 def setdiff(lst1, lst2):
