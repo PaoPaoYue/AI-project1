@@ -1,3 +1,6 @@
+"""
+The A* Search algorithm will try to fit all white tokens to the given destinations.
+"""
 from algorithm.PriorityQueue import *
 
 class Node:
@@ -31,7 +34,7 @@ class Node:
         pass
 
 
-
+# Let's start to do AStar
 def AStarSearch(start, goal_test):
 
     closedVertices = []

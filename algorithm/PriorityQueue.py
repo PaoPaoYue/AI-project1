@@ -1,3 +1,6 @@
+"""
+A development class to improve efficiency in A* searching or maybe in the future
+"""
 class IndexQueue:
     def __init__(self):
         self.pq = [None]
@@ -80,5 +83,3 @@ class IndexQueue:
         return self.vals[self.pq[a]] > self.vals[self.pq[b]]
         
 
-
-    
