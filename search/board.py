@@ -1,8 +1,13 @@
+"""
+The board module represents every entity we will have.
+It has 5 classes: Chess, Pos, Cell, Board, BoardNode
+"""
+
 import json
 from enum import Enum
 from collections import defaultdict
 
-from util import *
+from search.util import *
 from algorithm.AStarSearch import *
 
 BOARD_LEN = 8
@@ -59,6 +64,7 @@ class Pos:
         return str((self.x, self.y))
 
 
+# A cell contains the position, how many white/blacks on it and the zone number it is in
 class Cell:
 
     def __init__(self, x, y):
@@ -80,6 +86,7 @@ class Board:
     def __init__(self):
         self.cells = []               
 
+    # Preprocess the data provided and parse it into Board
     def read(self, filename):
         self.cells = [Cell(i % BOARD_LEN, i // BOARD_LEN) for i in range(BOARD_LEN ** 2)]
         with open(filename) as file:
@@ -109,6 +116,7 @@ class Board:
     def get_black(self):
         return [(cell.pos, cell.num) for cell in self.cells if cell.chess == Chess.black]
 
+    # Get all points that will be influenced by the boom action
     def get_boom(self, start, black_only):
         mark = defaultdict(bool)
         queue = [start]
@@ -156,6 +164,10 @@ class Board:
                 self.white = sorted(white)
                 self.cost = cost
 
+            # If any white token in the same zone as the destination:
+            #   h() = min_manhattan_dist(white in zone) - num(white out of zone)
+            # otherwise:
+            #   h() = sum_manhattan_dist(white out of zone)
             def heuristic(self):
                 target_zone = board.get_p(target).zone
                 in_score = []
@@ -171,6 +183,7 @@ class Board:
                 else:
                     return sum(out_score)
 
+            # Find the neighbours of the position in selected directions
             def neighbours(self):
                 for selected_pos, _ in self.white:
                     old = []
@@ -202,7 +215,8 @@ class Board:
 
             def __str__(self):
                 return ','.join(['({}, {})'.format(str(pos), num) for pos, num in self.white]) + str(self.priority())
-               
+
+        # The goal is to find the given destination
         def goal_test():
             boom = self.get_boom(target, False)
 
@@ -222,8 +236,9 @@ class Board:
         if path:
             board.set_white(path[-1].white)
             board.set_boom(target)
-        return path
+        return path     # Find the path. Done!
 
+    # Helper function to print the board
     def print(self):
         print_dict = {}
         for cell in self.cells:
@@ -235,6 +250,7 @@ class Board:
                 print_dict[(cell.pos.x, cell.pos.y)] = ""
         print_board(print_dict, "Board status", True)
 
+    # Helper function to show the zone
     def print_zone(self):
         print_dict = {}
         for cell in self.cells:
@@ -246,6 +262,7 @@ class Board:
                 print_dict[(cell.pos.x, cell.pos.y)] = cell.zone
         print_board(print_dict, "Board zone status", True)
 
+    # Update the zone occupies after every changes
     def __update_zone(self):
         zone = 1
         mark = defaultdict(bool)

@@ -1,8 +1,8 @@
-import operator
+# The class to locate the boom destinations. Give white tokens positions to boom all black
+
 import itertools
 
-from util import *
-from board import *
+from search.board import *
 
 
 class Locator:
@@ -20,7 +20,7 @@ class Locator:
                     return False
         return True
 
-
+    # find the closest distance between any white token and the destination
     def __closest_dist(self, target):
         min_dist = BOARD_LEN * BOARD_LEN
         for pos,_ in self.white:
@@ -29,6 +29,8 @@ class Locator:
                 min_dist = dist
         return min_dist
 
+    # create a dictionary that contains all points
+    # store the result that which cells will be explored when a white token boom at this point.
     def __create_boom_dict(self):
         boom_dict = {}
         for x in range(BOARD_LEN):
@@ -41,6 +43,7 @@ class Locator:
                     boom_dict[pos] = boom_set
         return boom_dict
 
+    # find all possible combos of points that can boom all black tokens
     def all_boom_combos(self):
         white_size = sum([num for pos, num in self.white])
         black_size = len(self.black)
@@ -56,5 +59,6 @@ class Locator:
                     if len(all_boom_set) == black_size:
                         for res in itertools.permutations(pos_comb, len(pos_comb)):
                             combos.append(res)
+        # sort it to make the one who can boom the largest number of enemies at the top
         return sorted(combos, key=lambda combo: sum(self.__closest_dist(pos) for pos in combo))
 

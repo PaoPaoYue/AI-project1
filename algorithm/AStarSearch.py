@@ -51,7 +51,7 @@ def AStarSearch(start, goal_test):
                 current = current.cameFrom()
                 path.append(current)
             path.reverse()
-            return path  # Done!
+            return path     # Done!
 
         closedVertices.append(current)
 
