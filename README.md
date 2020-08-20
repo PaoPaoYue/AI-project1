@@ -1,3 +1,3 @@
 # AI-project1
 
-###随便写点什么吧。。。
+###Comp30024 AI project part1 repo
